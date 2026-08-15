@@ -84,7 +84,7 @@ We discovered heavy-tailed distributions typical of coordinated social media beh
 
 The methodology and findings of this pipeline contributed directly to an international comparative research project.
 
-> **[📄 Read the Full Research Paper](research_paper.pdf)** (Included in this repository)
+> **📄 Scientific paper currently under peer-review (Available upon request)**
 
 ---
 
