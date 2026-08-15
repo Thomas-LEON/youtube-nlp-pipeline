@@ -1,7 +1,9 @@
-# Large-Scale NLP Pipeline: Semantic Classification of 14M YouTube Comments 📊
+# 📊 YouTube NLP Pipeline
 
-> **Data Engineering & Deep Learning Research Project**  
-> *End-to-end pipeline for extracting, cleaning, and classifying massive unstructured datasets using RoBERTa and mBERT.*
+> **Large-Scale Data Engineering & Deep Learning Research Pipeline.**
+
+> [!NOTE]
+> **Research Artifact** — This repository contains the code architecture and statistical findings of an international research project analyzing 14M+ YouTube comments. Due to GDPR constraints, raw data is excluded, but the 5-step modular pipeline is available for review.
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](https://www.python.org/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange?logo=jupyter)](https://jupyter.org/)
@@ -10,60 +12,63 @@
 
 ---
 
-## 🎯 Executive Summary
+## 🤔 The Challenge
 
-This repository contains the methodology and architecture for a large-scale data ingestion and NLP classification project. The goal was to collect, filter, and semantically classify over **14 million YouTube comments** to analyze public perception of e-cigarettes in France.
+Analyzing public sentiment on controversial topics (like e-cigarettes) requires moving beyond basic keyword matching. Social media data is exceptionally noisy, multi-lingual, and riddled with sarcasm. 
 
-This project demonstrates the ability to manage the full lifecycle of a machine learning project:
-1. **Massive Data Ingestion** via APIs.
-2. **Data Cleaning & Language Filtering** using advanced NLP models.
-3. **Statistical Annotation & Inter-rater Reliability** (Fleiss' Kappa).
-4. **Deep Learning Fine-Tuning** (Multilingual BERT) for semantic classification.
-
-📄 **[Read the Full Research Paper](research_paper.pdf)** included in this repository.
+To achieve scientific rigor, we needed an automated pipeline capable of:
+1. **Ingesting** millions of unstructured comments.
+2. **Filtering** out irrelevant noise using zero-shot semantic models.
+3. **Classifying** nuanced stances (Favorable vs. Unfavorable) using fine-tuned Deep Learning.
 
 ---
 
 ## 🏗️ Pipeline Architecture
 
-The processing pipeline is divided into three major stages:
+The solution is divided into a 5-step modular pipeline (available in the `notebooks/` directory).
 
-### 1. Ingestion & Filtering
-- Scraped 14M+ comments from ~500k videos using the YouTube Data API.
-- Implemented heuristic and NLP-based filters to remove duplicates, bots, and irrelevant content.
-- Utilized a zero-shot classification model (RoBERTa-based) to ensure comments were topically relevant to e-cigarettes.
-- Applied language detection models to isolate French-speaking demographics.
-
-### 2. Annotation & Ground Truth Validation
-- Built a stratified sample of ~4,000 comments for manual labeling (Favorable, Unfavorable, Neutral).
-- Validated annotation quality using **Fleiss’ Kappa**, ensuring statistical reliability across multiple annotators before training.
-
-### 3. Deep Learning Classification
-- Fine-tuned a **multilingual BERT (mBERT)** model for sequence classification.
-- Addressed complex linguistic challenges typical of social media: sarcasm, idiomatic expressions, and heavy class imbalance.
-- Evaluated performance rigorously using bootstrap confidence intervals (95% CI) for Precision, Recall, and F1-Score.
+```mermaid
+flowchart TD
+    A["🌐 YouTube Data API"] -->|"14M+ Comments"| B{"🔍 Step 1: DataPrep\nHeuristic & Zero-Shot"}
+    B -->|"Filtered & Clean"| C["📊 Step 2: Agreement Calculator\nFleiss' Kappa Validation"]
+    B --> D["📈 Step 3: EDA\nDistribution Analysis"]
+    C -->|"Gold Standard Dataset"| E{"🧠 Step 4: Stance Detection\nmBERT Fine-Tuning"}
+    E -->|"Classification"| F["🎯 Step 5: Model Characterization\nMetrics & Bootstrapping"]
+    
+    style A fill:#ff4757,color:#fff
+    style B fill:#3742fa,color:#fff
+    style C fill:#2ed573,color:#fff
+    style D fill:#ffa502,color:#fff
+    style E fill:#8e44ad,color:#fff
+    style F fill:#2f3542,color:#fff
+```
 
 ---
 
-## 📈 Model Performance & Metrics
+## ✅ What It Does (The Modules)
 
-The fine-tuned mBERT model achieved robust performance, particularly on the complex task of identifying polarized opinions in noisy social media text.
+*   **`1_DataPrep.ipynb`** : Ingests raw data, applies deduplication, language detection, and uses RoBERTa to filter out topically irrelevant content.
+*   **`2_Agreement_Calculator.ipynb`** : Calculates Fleiss’ Kappa on manually annotated samples to guarantee inter-annotator reliability before training.
+*   **`3_Data_Characterization.ipynb`** : Generates statistical distributions and WordClouds to understand the dataset organically.
+*   **`4_Stance_Detection_Model.ipynb`** : Fine-tunes a **multilingual BERT (mBERT)** model specifically on the polarized social media dataset.
+*   **`5_Model_Characterization.ipynb`** : Evaluates model robustness using precision, recall, F1-scores, and 95% bootstrap confidence intervals.
+
+---
+
+## 📈 Model Performance
+
+The fine-tuned mBERT model achieved robust performance, successfully navigating sarcasm and class imbalance.
 
 | Class | Precision (95% CI) | Recall (95% CI) | F1-Score (95% CI) |
 |---|---|---|---|
-| **Class 1 (Favorable)** | 0.96 *(0.92 - 0.98)* | 0.82 *(0.77 - 0.87)* | 0.88 *(0.85 - 0.91)* |
-| **Class 2 (Unfavorable)** | 0.68 *(0.60 - 0.76)* | 0.94 *(0.89 - 0.98)* | 0.79 *(0.73 - 0.84)* |
-
-*(Note: Class 0 represents neutral/unrelated content removed during final balanced evaluation).*
+| **Favorable** | 0.96 *(0.92 - 0.98)* | 0.82 *(0.77 - 0.87)* | 0.88 *(0.85 - 0.91)* |
+| **Unfavorable** | 0.68 *(0.60 - 0.76)* | 0.94 *(0.89 - 0.98)* | 0.79 *(0.73 - 0.84)* |
 
 ---
 
-## 📊 Exploratory Data Analysis (EDA)
+## 📊 Engagement Analytics (EDA)
 
-Post-classification, extensive statistical analysis was conducted to characterize engagement patterns and community dynamics. 
-
-### Engagement Distributions (CDFs)
-We observed heavy-tailed distributions typical of coordinated social media behavior. 
+We discovered heavy-tailed distributions typical of coordinated social media behavior.
 
 <div align="center">
   <img src="assets/cdf_favorable_users.png" width="30%" alt="CDF Favorable Users">
@@ -75,17 +80,19 @@ We observed heavy-tailed distributions typical of coordinated social media behav
 
 ---
 
-## 🛠️ Tech Stack
+## 📄 Scientific Publication
 
-- **Data Ingestion:** YouTube Data API v3, `requests`, `pandas`
-- **NLP & Deep Learning:** `transformers` (HuggingFace), `torch`, `scikit-learn`
-- **Visualization:** `matplotlib`, `seaborn`, `wordcloud`
-- **Statistics:** `scipy`, Bootstrap Confidence Intervals
+The methodology and findings of this pipeline contributed directly to an international comparative research project.
+
+> **[📄 Read the Full Research Paper](research_paper.pdf)** (Included in this repository)
 
 ---
 
-## 🔒 Note on Data Privacy
+## 🛠️ Tech Stack
 
-Due to GitHub file size limits and GDPR/Data Privacy compliance regarding user-generated content, the raw dataset (`14M rows`) and the cleaned CSV files are **not** included in this repository. 
-
-This repository serves to showcase the code architecture (see the `notebooks/` directory for the 5-step modular pipeline), the analytical methodology, and the final statistical findings.
+| Domain | Tools Used |
+|---|---|
+| **Data Ingestion** | YouTube Data API v3, `requests`, `pandas` |
+| **Deep Learning / NLP** | `transformers` (HuggingFace), `torch`, `scikit-learn` |
+| **Data Visualization** | `matplotlib`, `seaborn`, `wordcloud` |
+| **Statistics** | `scipy`, Bootstrap Confidence Intervals, Fleiss' Kappa |
