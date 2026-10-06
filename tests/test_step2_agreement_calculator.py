@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from src.youtube_nlp.agreement_calculator import (
+from src.youtube_nlp.step2_agreement_calculator import (
     AgreementEvaluator,
     calculate_fleiss_kappa,
 )
