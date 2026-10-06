@@ -1,0 +1,12 @@
+pandas
+torch
+transformers
+tqdm
+langdetect
+nltk
+scikit-learn
+matplotlib
+seaborn
+wordcloud
+scipy
+statsmodels
